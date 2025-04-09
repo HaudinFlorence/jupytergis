@@ -12,6 +12,9 @@ export namespace CommandIDs {
   export const identify = 'jupytergis:identify';
   export const temporalController = 'jupytergis:temporalController';
 
+  // geolocation 
+  export const getGeolocation = 'jupytergis:getGeolocation';
+
   // Layers and sources creation commands
   export const openLayerBrowser = 'jupytergis:openLayerBrowser';
 
@@ -106,7 +109,7 @@ const iconObject = {
   [CommandIDs.newGeoTiffEntry]: { iconClass: 'fa fa-image' },
   [CommandIDs.symbology]: { iconClass: 'fa fa-brush' },
   [CommandIDs.identify]: { iconClass: 'fa fa-info' },
-  [CommandIDs.temporalController]: { iconClass: 'fa fa-clock' }
+  [CommandIDs.temporalController]: { iconClass: 'fa fa-clock' },
 };
 
 /**

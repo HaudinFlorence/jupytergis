@@ -10,6 +10,7 @@ import { JSONValue } from '@lumino/coreutils';
 import { IDisposable } from '@lumino/disposable';
 import { v4 as uuid } from 'uuid';
 
+
 export class MainViewModel implements IDisposable {
   constructor(options: MainViewModel.IOptions) {
     this._jGISModel = options.jGISModel;
@@ -59,6 +60,7 @@ export class MainViewModel implements IDisposable {
     this._jGISModel.annotationModel?.addAnnotation(uuid(), value);
   }
 
+
   private async _onsharedLayersChanged(
     _: IJupyterGISDoc,
     change: IJGISLayerDocChange
@@ -71,7 +73,6 @@ export class MainViewModel implements IDisposable {
   private _jGISModel: IJupyterGISModel;
   private _viewSetting: ObservableMap<JSONValue>;
   private _commands: CommandRegistry;
-
   private _id: string;
   private _isDisposed = false;
 }
