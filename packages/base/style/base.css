@@ -59,3 +59,9 @@ button.jp-mod-styled.jp-mod-accept {
 button.jp-mod-styled.jp-mod-reject {
   background-color: var(--jp-layout-color4) !important;
 }
+
+.jp-Icon {
+  color: var(--jp-brand-color1);
+}
+
+
