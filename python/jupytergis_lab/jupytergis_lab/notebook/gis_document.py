@@ -45,6 +45,7 @@ from jupytergis_lab.notebook.symbology import (  # noqa: TC001
     Symbology,
 )
 from jupytergis_lab.notebook.utils import get_gpkg_layers
+import asyncio
 
 if TYPE_CHECKING:
     from jupyter_tiler.titiler import (
@@ -189,17 +190,7 @@ class GISDocument(CommWidget):
 
         self.ydoc["layers"] = self._layers = Map()
         self.ydoc["sources"] = self._sources = Map()
-        self.ydoc["options"] = self._options = Map(
-            {
-                "latitude": 0,
-                "longitude": 0,
-                "zoom": 0,
-                "bearing": 0,
-                "pitch": 0,
-                "projection": "EPSG:3857",
-                "storyMapPresentationMode": False,
-            },
-        )
+        self.ydoc["options"] = self._options = Map({})
         self.ydoc["layerTree"] = self._layerTree = Array()
         self.ydoc["metadata"] = self._metadata = Map()
 
@@ -219,7 +210,19 @@ class GISDocument(CommWidget):
             self._options["projection"] = projection
 
         self.tile_server = None
+        
+    def wait_for_doc_is_ready(self):
+        future = asyncio.Future()
 
+        def handle_options_change(self):
+            if not future.done():
+                future.set_result(self)
+            self._options_subscription.unobserve(self._options_subscription)
+
+        self._options_subscription = self._options.observe(handle_options_change)
+        return future  
+        
+        
     @property
     def layers(self) -> dict:
         """Get the layer list"""
