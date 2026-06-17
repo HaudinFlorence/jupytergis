@@ -3,12 +3,16 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import sys
+import warnings
 import xml.etree.ElementTree as ET
+from importlib.metadata import version
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, TypedDict
 from uuid import uuid4
 
 import requests
+from IPython import get_ipython
 from IPython.display import display
 from jupytergis_core.colors import try_hex_to_rgba
 from jupytergis_core.schema import (
@@ -229,6 +233,18 @@ class GISDocument(CommWidget):
         self._options_subscription = self._options.observe(handle_options_change)
 
         return future
+
+    def check_top_level_async_support(self):
+        if sys.implementation.name != "xeus_python":
+            warnings.warn(
+                "The JupyterGIS Python API is better experienced in the xeus-python kernel which supports real top level await",
+                stacklevel=2,
+            )
+
+        ip = get_ipython()
+        is_xeus_python = ip.__class__.__name__ == "XPythonShell"
+
+        return is_xeus_python and version("xeus_python_shell") >= "0.8.0"
 
     @property
     def layers(self) -> dict:
