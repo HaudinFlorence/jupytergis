@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import xml.etree.ElementTree as ET
@@ -45,7 +46,6 @@ from jupytergis_lab.notebook.symbology import (  # noqa: TC001
     Symbology,
 )
 from jupytergis_lab.notebook.utils import get_gpkg_layers
-import asyncio
 
 if TYPE_CHECKING:
     from jupyter_tiler.titiler import (
