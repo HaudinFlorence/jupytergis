@@ -211,7 +211,7 @@ class GISDocument(CommWidget):
 
         self.tile_server = None
         
-    def wait_for_doc_is_ready(self):
+    async def ready(self):
         future = asyncio.Future()
 
         def handle_options_change(self):
