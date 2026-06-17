@@ -210,7 +210,7 @@ class GISDocument(CommWidget):
             self._options["projection"] = projection
 
         self.tile_server = None
-        
+
     async def ready(self):
         future = asyncio.Future()
 
@@ -220,9 +220,8 @@ class GISDocument(CommWidget):
             self._options_subscription.unobserve(self._options_subscription)
 
         self._options_subscription = self._options.observe(handle_options_change)
-        return future  
-        
-        
+        return future
+
     @property
     def layers(self) -> dict:
         """Get the layer list"""
