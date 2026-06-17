@@ -5,7 +5,7 @@ import json
 import logging
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, TypedDict
 from uuid import uuid4
 
 import requests
@@ -53,6 +53,16 @@ if TYPE_CHECKING:
         DataArray,
         TiTilerServer,
     )
+
+
+class DocOptions(TypedDict):
+    latitude: float | None
+    longitude: float | None
+    zoom: float | None
+    extent: list[float] | None
+    bearing: float | None
+    pitch: float | None
+    projection: str | None
 
 
 logger = logging.getLogger(__file__)
@@ -170,13 +180,7 @@ class GISDocument(CommWidget):
     def __init__(
         self,
         path: str | Path | None = None,
-        latitude: float | None = None,
-        longitude: float | None = None,
-        zoom: float | None = None,
-        extent: list[float] | None = None,
-        bearing: float | None = None,
-        pitch: float | None = None,
-        projection: str | None = None,
+        options: DocOptions | None = None,
     ):
         if isinstance(path, Path):
             path = str(path)
@@ -194,32 +198,36 @@ class GISDocument(CommWidget):
         self.ydoc["layerTree"] = self._layerTree = Array()
         self.ydoc["metadata"] = self._metadata = Map()
 
-        if latitude is not None:
-            self._options["latitude"] = latitude
-        if longitude is not None:
-            self._options["longitude"] = longitude
-        if extent is not None:
-            self._options["extent"] = extent
-        if zoom is not None:
-            self._options["zoom"] = zoom
-        if bearing is not None:
-            self._options["bearing"] = bearing
-        if pitch is not None:
-            self._options["pitch"] = pitch
-        if projection is not None:
-            self._options["projection"] = projection
+        self._initial_options = options
 
         self.tile_server = None
 
-    async def ready(self):
+    def ready(self):
         future = asyncio.Future()
 
         def handle_options_change(self):
             if not future.done():
                 future.set_result(self)
+
             self._options_subscription.unobserve(self._options_subscription)
 
+            if self._initial_options["latitude"] is not None:
+                self._options["latitude"] = self._initial_options["latitude"]
+            if self._initial_options["longitude"] is not None:
+                self._options["longitude"] = self._initial_options["longitude"]
+            if self._initial_options["extent"] is not None:
+                self._options["extent"] = self._initial_options["extent"]
+            if self._initial_options["zoom"] is not None:
+                self._options["zoom"] = self._initial_options["zoom"]
+            if self._initial_options["bearing"] is not None:
+                self._options["bearing"] = self._initial_options["bearing"]
+            if self._initial_options["pitch"] is not None:
+                self._options["pitch"] = self._initial_options["pitch"]
+            if self._initial_options["projection"] is not None:
+                self._options["projection"] = self._initial_options["projection"]
+
         self._options_subscription = self._options.observe(handle_options_change)
+
         return future
 
     @property
