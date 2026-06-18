@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import sys
 import warnings
 import xml.etree.ElementTree as ET
 from importlib.metadata import version
@@ -206,12 +205,20 @@ class GISDocument(CommWidget):
 
         self.tile_server = None
 
+    async def initialize(self):
+        self.supports_top_level_await = self.check_top_level_async_support()
+
+        if self.supports_top_level_await:
+            await self.ready()
+        else:
+            raise ValueError("The kernel does not support top level async ")
+
     async def ready(self):
         future = asyncio.Future()
 
         def handle_options_change(self):
             if not future.done():
-                future.set_result(self)
+                future.set_result(None)
 
             self._options_subscription.unobserve(self._options_subscription)
 
@@ -234,17 +241,19 @@ class GISDocument(CommWidget):
 
         return await future
 
+    def check_if_xeus_python(self):
+        ip = get_ipython()
+        return ip.__class__.__name__ == "XPythonShell"
+
     def check_top_level_async_support(self):
-        if sys.implementation.name != "xeus_python":
+        self.is_xeus_python = self.check_if_xeus_python()
+        if not self.is_xeus_python:
             warnings.warn(
                 "The JupyterGIS Python API is better experienced in the xeus-python kernel which supports real top level await",
                 stacklevel=2,
             )
 
-        ip = get_ipython()
-        is_xeus_python = ip.__class__.__name__ == "XPythonShell"
-
-        return is_xeus_python and version("xeus_python_shell") >= "0.8.0"
+        return self.is_xeus_python and version("xeus_python_shell") >= "0.8.0"
 
     @property
     def layers(self) -> dict:
