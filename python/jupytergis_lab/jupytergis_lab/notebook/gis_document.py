@@ -241,12 +241,8 @@ class GISDocument(CommWidget):
 
         return await future
 
-    def check_if_xeus_python(self):
-        ip = get_ipython()
-        return ip.__class__.__name__ == "XPythonShell"
-
-    def check_top_level_async_support(self):
-        self.is_xeus_python = self.check_if_xeus_python()
+    def _check_top_level_async_support(self):
+        is_xeus_python = get_ipython().__class__.__name__ == "XPythonShell"
         if not self.is_xeus_python:
             warnings.warn(
                 "The JupyterGIS Python API is better experienced in the xeus-python kernel which supports real top level await",
