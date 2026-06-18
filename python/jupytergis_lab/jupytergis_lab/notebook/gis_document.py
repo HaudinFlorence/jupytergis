@@ -206,7 +206,7 @@ class GISDocument(CommWidget):
 
         self.tile_server = None
 
-    def ready(self):
+    async def ready(self):
         future = asyncio.Future()
 
         def handle_options_change(self):
@@ -232,7 +232,7 @@ class GISDocument(CommWidget):
 
         self._options_subscription = self._options.observe(handle_options_change)
 
-        return future
+        return await future
 
     def check_top_level_async_support(self):
         if sys.implementation.name != "xeus_python":

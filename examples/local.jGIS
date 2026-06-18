@@ -17,22 +17,79 @@
     "aae4466d-49da-4308-b73d-046e974f92a4": {
       "name": "Subset of Manhattan roads",
       "parameters": {
-        "color": {
-          "circle-fill-color": "#dc8add",
-          "circle-radius": 5.0,
-          "circle-stroke-color": "#dc8add",
-          "circle-stroke-line-cap": "round",
-          "circle-stroke-line-join": "round",
-          "circle-stroke-width": 1.25,
-          "fill-color": "#dc8add",
-          "stroke-color": "#dc8add",
-          "stroke-line-cap": "round",
-          "stroke-line-join": "round",
-          "stroke-width": 1.25
-        },
         "opacity": 1.0,
         "source": "d82b24cf-e43a-43aa-bc7b-2578adc7ef8a",
-        "symbologyState": {}
+        "symbologyState": {
+          "layers": [
+            {
+              "id": "37504ae6-4462-400d-83b2-b54b50bff54f",
+              "rules": [
+                {
+                  "id": "b530aef5-45ec-4df0-a2ba-f5e6f3f050af",
+                  "mappings": [
+                    {
+                      "channels": [
+                        "fill-color",
+                        "circle-fill-color"
+                      ],
+                      "scale": {
+                        "params": {
+                          "value": [
+                            220.0,
+                            138.0,
+                            221.0,
+                            1.0
+                          ]
+                        },
+                        "scheme": "constant_rgba"
+                      }
+                    },
+                    {
+                      "channels": [
+                        "stroke-color",
+                        "circle-stroke-color"
+                      ],
+                      "scale": {
+                        "params": {
+                          "value": [
+                            220.0,
+                            138.0,
+                            221.0,
+                            1.0
+                          ]
+                        },
+                        "scheme": "constant_rgba"
+                      }
+                    },
+                    {
+                      "channels": [
+                        "stroke-width",
+                        "circle-stroke-width"
+                      ],
+                      "scale": {
+                        "params": {
+                          "value": 1.25
+                        },
+                        "scheme": "constant_num"
+                      }
+                    },
+                    {
+                      "channels": [
+                        "circle-radius"
+                      ],
+                      "scale": {
+                        "params": {
+                          "value": 5.0
+                        },
+                        "scheme": "constant_num"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       },
       "type": "VectorLayer",
       "visible": true
@@ -62,7 +119,7 @@
     "projection": "EPSG:3857",
     "zoom": 6.567343994630387
   },
-  "schemaVersion": "0.5.0",
+  "schemaVersion": "0.6.0",
   "sources": {
     "3bd6b874-a28a-4ef6-bef8-a7257bb35c51": {
       "name": "OpenStreetMap.Mapnik",
@@ -111,11 +168,14 @@
         "additionalFiles": {},
         "attribution": "",
         "encoding": "UTF-8",
+        "httpHeaders": "",
         "path": "data/nyc/nyc.zip",
-        "projection": "WGS84"
+        "projection": "WGS84",
+        "useProxy": false
       },
       "type": "ShapefileSource"
     }
   },
-  "stories": {}
+  "stories": {},
+  "viewState": {}
 }
