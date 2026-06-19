@@ -170,7 +170,11 @@ class GISDocument(CommWidget):
 
     async def ready(self):
         if not self.supports_top_level_await:
-            warnings.warn("The kernel does not support top level awaiting comm messages. The JupyterGIS API works better with a recent version of xeus-python today. There are discussions ongoing on making it work in ipykernel")
+            warnings.warn(
+                "The kernel does not support top level awaiting comm messages. The JupyterGIS API works better with a recent version of xeus-python today. There are discussions ongoing on making it work in ipykernel",
+                stacklevel=2,
+            )
+            return None
         return await self._ready_future
 
     def _check_top_level_async_support(self):
