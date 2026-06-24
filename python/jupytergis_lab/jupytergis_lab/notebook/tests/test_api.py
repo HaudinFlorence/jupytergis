@@ -51,25 +51,33 @@ class TestDocument:
 
 
 class TestTiffLayer(TestDocument):
-    def test_sourcelayer(self):
+    @pytest.mark.asyncio
+    async def test_sourcelayer(self):
+        await self.doc.ready()
         tif_layer = self.doc.add_geotiff_layer(url=TEST_TIF)
         assert self.doc.layers[tif_layer]
 
 
 class TestGeoPackageVectorLayer(TestDocument):
-    def test_sourcelayer(self):
+    @pytest.mark.asyncio
+    async def test_sourcelayer(self):
+        await self.doc.ready()
         gpkg_layers = self.doc.add_geopackage_vector_layer(TEST_GPKG_VECTOR)
         assert all(name in self.doc.layers for name in gpkg_layers)
 
 
 class TestGeoPackageRasterLayer(TestDocument):
-    def test_sourcelayer(self):
+    @pytest.mark.asyncio
+    async def test_sourcelayer(self):
+        await self.doc.ready()
         gpkg_layers = self.doc.add_geopackage_raster_layer(TEST_GPKG_RASTER)
         assert all(name in self.doc.layers for name in gpkg_layers)
 
 
 class TestGeoParquetLayer(TestDocument):
-    def test_sourcelayer(self):
+    @pytest.mark.asyncio
+    async def test_sourcelayer(self):
+        await self.doc.ready()
         geoparquet_layer = self.doc.add_geoparquet_layer(
             TEST_GEOPARQUET,
         )
@@ -217,7 +225,9 @@ class TestGrammarSymbologyBuilders:
 
 
 class TestGeoJSONGrammarSymbology(TestDocument):
-    def test_add_geojson_layer_persists_fill_symbology_as_layers_only(self):
+    @pytest.mark.asyncio
+    async def test_add_geojson_layer_persists_fill_symbology_as_layers_only(self):
+        await self.doc.ready()
         layer_id = self.doc.add_geojson_layer(
             data=SAMPLE_GEOJSON,
             name="Quakes",
@@ -244,7 +254,9 @@ class TestGeoJSONGrammarSymbology(TestDocument):
 
 
 class TestLayerManipulation(TestDocument):
-    def test_add_and_remove_layer_and_source(self):
+    @pytest.mark.asyncio
+    async def test_add_and_remove_layer_and_source(self):
+        await self.doc.ready()
         layer_id = self.doc.add_geotiff_layer(url=TEST_TIF)
         assert len(self.doc.layers) == 1
 
