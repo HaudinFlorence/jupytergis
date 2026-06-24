@@ -150,7 +150,7 @@ class GISDocument(CommWidget):
         def handle_options_change(self, event):
             if not self._ready_future.done():
                 self._ready_future.set_result(None)
-                self._is_ready = False
+                self._is_ready = True
 
             self._options_subscription.unobserve(self._options_subscription)
 
@@ -182,8 +182,6 @@ class GISDocument(CommWidget):
         return await self._ready_future
 
     def _assert_is_ready(self):
-        if self._ready_future.done():
-            self._is_ready = True
         if not self._is_ready:
             raise RuntimeError("Document is not ready yet.")
 
