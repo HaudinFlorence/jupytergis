@@ -136,6 +136,7 @@ class GISDocument(CommWidget):
         self.ydoc["metadata"] = self._metadata = Map()
         self.tile_server = None
         self._ready_future = asyncio.Future()
+        self._is_ready = False
         self.supports_top_level_await = self._check_top_level_async_support()
 
         if not self.supports_top_level_await:
@@ -147,6 +148,7 @@ class GISDocument(CommWidget):
         def handle_options_change(self, event):
             if not self._ready_future.done():
                 self._ready_future.set_result(None)
+                self._is_ready = False
 
             self._options_subscription.unobserve(self._options_subscription)
 
@@ -176,6 +178,12 @@ class GISDocument(CommWidget):
             )
             return None
         return await self._ready_future
+
+    def _assert_is_ready(self):
+        if self._ready_future.done():
+            self._is_ready = True
+        if not self._is_ready:
+            raise RuntimeError("Document is not ready yet.")
 
     def _check_top_level_async_support(self):
         is_xeus_python = get_ipython().__class__.__name__ == "XPythonShell"
@@ -242,6 +250,8 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1.
         :param url_parameters: Extra URL parameters for tile requests.
         """
+        # First check if the document is ready before adding a raster layer
+        self._assert_is_ready()
         # Extract name from URL if not provided
         if name is None:
             name = _extract_layer_name(url)
@@ -290,6 +300,9 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1.
         :param symbology: The symbology configuration to persist with the layer.
         """
+        # First check if the document is ready before adding a vectortile layer
+        self._assert_is_ready()
+
         # Extract name from URL if not provided
         if name is None:
             name = _extract_layer_name(url)
@@ -343,6 +356,9 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1.
         :param symbology: The symbology configuration to persist with the layer.
         """
+        # First check if the document is ready before adding a geojson layer
+        self._assert_is_ready()
+
         if isinstance(path, Path):
             path = str(path)
 
@@ -407,6 +423,10 @@ class GISDocument(CommWidget):
         # opened here from the notebook is reused by the frontend without the
         # user having to sign in a second time from the UI. The bearer is a
         # session identifier, not long-lived credentials.
+
+        # First check if the document is ready before adding an openeo tile layer
+        self._assert_is_ready()
+
         source = {
             "type": SourceType.OpenEOTileSource,
             "name": f"{name} Source" if name is not None else "OpenEO Tiles Source",
@@ -442,6 +462,9 @@ class GISDocument(CommWidget):
         :param coordinates: Corners of image specified in longitude, latitude pairs.
         :param opacity: The opacity, between 0 and 1.
         """
+        # First check if the document is ready before adding an image layer
+        self._assert_is_ready()
+
         if url is None or coordinates is None:
             raise ValueError("URL and Coordinates are required")
         # Extract name from URL if not provided
@@ -479,6 +502,9 @@ class GISDocument(CommWidget):
         :param coordinates: Corners of video specified in longitude, latitude pairs.
         :param opacity: The opacity, between 0 and 1.
         """
+        # First check if the document is ready before adding a video layer
+        self._assert_is_ready()
+
         if coordinates is None:
             coordinates = []
 
@@ -528,6 +554,9 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1, defaults to 1.0
         :param symbology: The symbology configuration to persist with the layer.
         """
+        # First check if the document is ready before adding a geotiff layer
+        self._assert_is_ready()
+
         # Extract name from URL if not provided
         if name is None:
             name = _extract_layer_name(url)
@@ -572,6 +601,9 @@ class GISDocument(CommWidget):
         :param name: The name that will be used for the object in the document, defaults to "Hillshade Layer"
         :param attribution: The attribution.
         """
+        # First check if the document is ready before adding a hillshade layer
+        self._assert_is_ready()
+
         if urlParameters is None:
             urlParameters = {}
         # Extract name from URL if not provided
@@ -612,6 +644,9 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1.
         :param symbology: The symbology configuration to persist with the layer.
         """
+        # First check if the document is ready before adding a geoparquet layer
+        self._assert_is_ready()
+
         # Extract name from path if not provided
         if name is None:
             name = _extract_layer_name(path)
@@ -658,6 +693,9 @@ class GISDocument(CommWidget):
         :param opacity: The opacity, between 0 and 1.
         :param symbology: The symbology configuration to persist with the layers.
         """
+        # First check if the document is ready before adding a geoparquet vector layer
+        self._assert_is_ready()
+
         if isinstance(table_names, str):
             table_names = [part.strip() for part in table_names.split(",")]
 
@@ -728,6 +766,9 @@ class GISDocument(CommWidget):
         :param attribution: The attribution.
         :param opacity: The opacity, between 0 and 1.
         """
+        # First check if the document is ready before adding a geoparquet raster layer
+        self._assert_is_ready()
+
         if isinstance(table_names, str):
             table_names = [part.strip() for part in table_names.split(",")]
 
@@ -795,6 +836,9 @@ class GISDocument(CommWidget):
             See the `TiTiler algorithm docs <https://developmentseed.org/titiler/examples/notebooks/Working_with_Algorithm>`_
             for details.
         """
+        # First check if the document is ready before adding a data array layer
+        self._assert_is_ready()
+
         try:
             from jupyter_tiler.titiler import _get_server, add_data_array
         except ImportError as e:
@@ -952,6 +996,9 @@ class GISDocument(CommWidget):
         interpolate:
             Whether to interpolate between grid cells when overzooming.
         """
+        # First check if the document is ready before adding a wms tile layer
+        self._assert_is_ready()
+
         if not url or not isinstance(url, str):
             raise ValueError("url must be a non-empty string")
         if not layer_name or not isinstance(layer_name, str):
