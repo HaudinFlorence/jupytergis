@@ -51,33 +51,29 @@ class TestDocument:
 
 
 class TestTiffLayer(TestDocument):
-    @pytest.mark.asyncio
-    async def test_sourcelayer(self):
-        await self.doc.ready()
+    def test_sourcelayer(self):
+        self.doc._is_ready = True
         tif_layer = self.doc.add_geotiff_layer(url=TEST_TIF)
         assert self.doc.layers[tif_layer]
 
 
 class TestGeoPackageVectorLayer(TestDocument):
-    @pytest.mark.asyncio
-    async def test_sourcelayer(self):
-        await self.doc.ready()
+    def test_sourcelayer(self):
+        self.doc._is_ready = True
         gpkg_layers = self.doc.add_geopackage_vector_layer(TEST_GPKG_VECTOR)
         assert all(name in self.doc.layers for name in gpkg_layers)
 
 
 class TestGeoPackageRasterLayer(TestDocument):
-    @pytest.mark.asyncio
-    async def test_sourcelayer(self):
-        await self.doc.ready()
+    def test_sourcelayer(self):
+        self.doc._is_ready = True
         gpkg_layers = self.doc.add_geopackage_raster_layer(TEST_GPKG_RASTER)
         assert all(name in self.doc.layers for name in gpkg_layers)
 
 
 class TestGeoParquetLayer(TestDocument):
-    @pytest.mark.asyncio
-    async def test_sourcelayer(self):
-        await self.doc.ready()
+    def test_sourcelayer(self):
+        self.doc._is_ready = True
         geoparquet_layer = self.doc.add_geoparquet_layer(
             TEST_GEOPARQUET,
         )
@@ -225,9 +221,8 @@ class TestGrammarSymbologyBuilders:
 
 
 class TestGeoJSONGrammarSymbology(TestDocument):
-    @pytest.mark.asyncio
-    async def test_add_geojson_layer_persists_fill_symbology_as_layers_only(self):
-        await self.doc.ready()
+    def test_add_geojson_layer_persists_fill_symbology_as_layers_only(self):
+        self.doc._is_ready = True
         layer_id = self.doc.add_geojson_layer(
             data=SAMPLE_GEOJSON,
             name="Quakes",
@@ -254,9 +249,8 @@ class TestGeoJSONGrammarSymbology(TestDocument):
 
 
 class TestLayerManipulation(TestDocument):
-    @pytest.mark.asyncio
-    async def test_add_and_remove_layer_and_source(self):
-        await self.doc.ready()
+    def test_add_and_remove_layer_and_source(self):
+        self.doc._is_ready = True
         layer_id = self.doc.add_geotiff_layer(url=TEST_TIF)
         assert len(self.doc.layers) == 1
 

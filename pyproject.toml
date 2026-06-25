@@ -12,7 +12,6 @@ requires-python = ">=3.12"
 [dependency-groups]
 test = [
     "pytest",
-    "pytest-asyncio",
     "dirty-equals",
     "numpy",
     "rioxarray",
