@@ -362,7 +362,7 @@ class GISDocument(CommWidget):
         if isinstance(path, Path):
             path = str(path)
 
-        if path is None and data is None:
+        if isinstance(path, Path) and data is not None:
             raise ValueError("Cannot create a GeoJSON layer without data")
 
         if path is not None and data is not None:
@@ -748,8 +748,10 @@ class GISDocument(CommWidget):
         if isinstance(table_names, str):
             table_names = [part.strip() for part in table_names.split(",")]
 
-        if not table_names:
+        if table_names is None:
             table_names = get_gpkg_layers(path, "features")
+        elif isinstance(table_names, str):
+            table_names = [table_names]
         # Extract name from path if not provided
         if name is None:
             name = _extract_layer_name(path)
@@ -846,7 +848,6 @@ class GISDocument(CommWidget):
                 "visible": True,
                 "parameters": {
                     "source": source_id,
-                    "type": type,
                     "opacity": opacity,
                     "attribution": attribution,
                 },
