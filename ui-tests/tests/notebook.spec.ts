@@ -19,9 +19,18 @@ const testCellOutputs = async (
 
   for (const notebook of notebooks) {
     const results: Array<{ cellIndex: number; screenshot: Buffer }> = [];
+
     await page.notebook.openByPath(`${tmpPath}/${notebook}`);
     await page.notebook.activate(notebook);
-    await page.waitForTimeout(1000);
+    await page.getByTitle('Switch kernel').click();
+    await page
+      .getByRole('dialog')
+      .getByRole('combobox')
+      .selectOption('{"name":"Python 3.14 (XPython)"}');
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: 'Select' })
+      .click();
 
     const getCaptureImageName = (
       contextPrefix: string,
