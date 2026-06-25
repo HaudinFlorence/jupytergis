@@ -22,14 +22,12 @@ const testCellOutputs = async (
 
     await page.notebook.openByPath(`${tmpPath}/${notebook}`);
     await page.notebook.activate(notebook);
-    await page.notebook.setKernel('Python 3.13 (XPython)');
 
     const currentDisplayName = await notebook.getKernel();
     console.log('Current kernel:', currentDisplayName);
     if (currentDisplayName == 'Python 3 (ipykernel)')
       await notebook.switchKernel('Python 3.13 (XPython)');
 
-    // Verify the switch
     const after = await notebook.getKernel();
     expect(after).toBe('Python 3.13 (XPython)');
 
