@@ -21,9 +21,10 @@ const testCellOutputs = async (
     const results: Array<{ cellIndex: number; screenshot: Buffer }> = [];
 
     await page.notebook.openByPath(`${tmpPath}/${notebook}`);
-    await page.notebook.activate(notebook);
-    await notebook.switchKernel('Python 3.13 (XPython)');
 
+    await page.notebook.activate(notebook);
+    const toolbar = page.getByRole('toolbar', { name: 'notebook actions' });
+    await expect(toolbar.getByText('Python 3.13 (XPython)')).toBeVisible();
     await page.waitForTimeout(1000);
 
     const getCaptureImageName = (
