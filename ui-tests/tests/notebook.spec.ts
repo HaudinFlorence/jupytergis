@@ -26,11 +26,12 @@ const testCellOutputs = async (
     await page
       .getByRole('dialog')
       .getByRole('combobox')
-      .selectOption('{"name":"Python 3.14 (XPython)"}');
+      .selectOption('{"name":"Python 3.12 (XPython)"}');
     await page
       .getByRole('dialog')
       .getByRole('button', { name: 'Select' })
       .click();
+
 
     const getCaptureImageName = (
       contextPrefix: string,
