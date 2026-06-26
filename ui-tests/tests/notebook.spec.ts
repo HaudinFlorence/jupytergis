@@ -23,6 +23,10 @@ const testCellOutputs = async (
     await page.notebook.openByPath(`${tmpPath}/${notebook}`);
     await page.notebook.activate(notebook);
     await page.getByTitle('Switch kernel').click();
+    const options =  await page
+      .getByRole('dialog')
+      .getByRole('combobox')
+    console.log('options:', options)
     await page
       .getByRole('dialog')
       .getByRole('combobox')
